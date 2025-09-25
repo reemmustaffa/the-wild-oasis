@@ -1,33 +1,31 @@
-//styled component library for styling
-//بتكون خاصه بالكبموبنت بتاعها فقط
-//احسن حاجه فيها كمان ان لما تستخدم الكومبونت تقدر تحط propsعليه عادي كأنه عنصر html عادي
-import styled from "styled-components";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import GlobalStyles from "./styles/GlobalStyles";
-import Button from "./ui/Button";
-import Input from "./ui/Input";
-import Heading from "./ui/Heading";
-
-//استايل ل component
-const StyledApp = styled.main`
-  background-color: red;
-  padding: 20px;
-`;
+import Dashboard from "./pages/Dashboard";
+import Bookings from "./pages/Bookings";
+import Cabins from "./pages/Cabins";
+import Users from "./pages/Users";
+import Settings from "./pages/Settings";
+import Account from "./pages/Account";
+import Login from "./pages/Login";
+import PageNotFound from "./pages/PageNotFound";
 
 function App() {
   return (
     <>
       <GlobalStyles />
-      <StyledApp onClick={() => console.log("parent")}>
-        {/* as=>عشان اخلي الايلمنت دا يتحول للعنصر دا فغلا */}
-        <Heading as="h1">The wild oasis</Heading>
-        <Heading as="h2">check in and out</Heading>
-        <Button onClick={() => console.log("check in ")}>check in</Button>
-        <Button onClick={() => console.log("check out")}>check out</Button>
-
-        <Heading as="h3">form</Heading>
-        <Input type="number" placeholder="number of guests" />
-        <Input type="number" placeholder="number of guests" />
-      </StyledApp>
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<Navigate replace to="/dashboard" />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/bookings" element={<Bookings />} />
+          <Route path="/cabins" element={<Cabins />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
