@@ -17,7 +17,7 @@ function CreateCabinForm() {
 
   const { register, handleSubmit, reset, getValues, formState } = useForm();
   const { errors } = formState;
-  console.log(errors);
+  // console.log(errors);
 
   const queryClient = useQueryClient();
 
@@ -35,7 +35,7 @@ function CreateCabinForm() {
 
   //دي هتتنفذ اول لما اعمل سبمت
   function onSubmit(data) {
-    mutate(data);
+    mutate({ ...data, image: data.image[0] });
   }
 
   function onError(errors) {
@@ -114,8 +114,16 @@ function CreateCabinForm() {
         />
       </FormRow>
 
-      <FormRow label="Cabin photo">
-        <FileInput id="image" accept="image/*" />
+      <FormRow label="Cabin photo" error={errors?.image?.message}>
+        <FileInput
+          id="image"
+          type="file"
+          // "image/*" معناها: أي نوع من الصور، زي PNG, JPG, GIF…
+          accept="image/*"
+          {...register("image", {
+            required: "This field is required",
+          })}
+        />
       </FormRow>
 
       <FormRow>
