@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { formatCurrency } from "../../utils/helpers";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteCabin } from "../../services/apiCabins";
 
 const TableRow = styled.div`
   display: grid;
@@ -39,9 +41,35 @@ const Discount = styled.div`
   font-weight: 500;
   color: var(--color-green-700);
 `;
+
 function CabinRow({ cabin }) {
-  const { id, name, maxCapacity, regularPrice, discount, description, image } =
-    cabin;
+  //ده هو الـ object اللي بيدير الكاش بتاع React Query
+  const queryClient = useQueryClient();
+
+  const { isLoading: isDeleting, mutate } = useMutation({
+    mutationFn: deleteCabin,
+    //دي هتنفذ بعد مايحصل مسح عشان تعمل ريفتش عشان ال ui يتعدل
+    onSuccess: () => {
+      alert("cabin successfully deleted");
+      //→ ده بيقول لReact Query: "الكاش بتاع الكويري دي بقى قديم، اعمل refetch"
+      queryClient.invalidateQueries({
+        queryKey: ["cabins"],
+      });
+    },
+    onError: (err) => {
+      alert(err.message);
+    },
+  });
+
+  const {
+    id: cabinId,
+    name,
+    maxCapacity,
+    regularPrice,
+    discount,
+    description,
+    image,
+  } = cabin;
   return (
     <TableRow role="row">
       <Img src={image} alr={name} />
@@ -49,7 +77,9 @@ function CabinRow({ cabin }) {
       <div>Fits up to {maxCapacity} guests</div>
       <Price>{formatCurrency(regularPrice)}</Price>
       <Discount>{formatCurrency(discount)}</Discount>
-      <button>Delete</button>
+      <button onClick={() => mutate(cabinId)} disabled={isDeleting}>
+        Delete
+      </button>
     </TableRow>
   );
 }
