@@ -12,17 +12,21 @@ import Account from "./pages/Account";
 import Login from "./pages/Login";
 import PageNotFound from "./pages/PageNotFound";
 import AppLayout from "./ui/AppLayout";
+import { Toaster } from "react-hot-toast";
 
 //مسئول عن تخزين البيانات (caching).
 
 // متابعة حالة الـ queries (loading, error, success).
 
 // تحديث البيانات (refetching).
+//ده الـ مدير الكاش في React Query، اللي بيخزن الداتا اللي جايه من الـ API ويتابع حالتها (fresh, stale, loading...).
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       // أي بيانات بترجع من query هتعتبر حديثة (fresh) لمدة دقيقة.
-      staleTime: 60 * 1000,
+      // staleTime: 60 * 1000,
+      // انا مش عايزاها تاخد وقت عمما تتغير لان هتفضل محتفظه بالقديم
+      staleTime: 0,
     },
   },
 });
@@ -52,6 +56,26 @@ function App() {
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
+      <Toaster
+        position="top-center"
+        gutter={12}
+        containerStyle={{ margin: "8px" }}
+        toastOptions={{
+          success: {
+            duration: 3000,
+          },
+          error: {
+            duration: 5000,
+          },
+          style: {
+            fontSize: "16px",
+            maxWidth: "500px",
+            padding: "16px 24px",
+            backgroundColor: "var(--color-grey-0)",
+            color: "var(--color-grey-700)",
+          },
+        }}
+      />
     </QueryClientProvider>
   );
 }
