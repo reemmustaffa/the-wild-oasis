@@ -6,6 +6,9 @@ import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createCabin } from "../../services/apiCabins";
+import toast from "react-hot-toast";
 
 const FormRow = styled.div`
   display: grid;
@@ -46,11 +49,26 @@ const Error = styled.span`
 function CreateCabinForm() {
   //register → لتسجيل كل input عندك.
   //handleSubmit → لتجهيز submit الفورم مع validation تلقائي.
-  const { register, handleSubmit } = useForm();
+
+  const { register, handleSubmit, reset } = useForm();
+
+  const queryClient = useQueryClient();
+
+  const { isLoading: isCreating, mutate } = useMutation({
+    mutationFn: createCabin,
+    onSuccess: () => {
+      toast.success("New cabin successfully created");
+      queryClient.invalidateQueries({
+        queryKey: ["cabins"],
+      });
+      reset();
+    },
+    onError: (err) => toast.error(err.message),
+  });
 
   //دي هتتنفذ اول لما اعمل سبمت
   function onSubmit(data) {
-    console.log(data);
+    mutate(data);
   }
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
@@ -99,7 +117,7 @@ function CreateCabinForm() {
         <Button variation="secondary" type="reset">
           Cancel
         </Button>
-        <Button>Add cabin</Button>
+        <Button disabled={isCreating}>Add cabin</Button>
       </FormRow>
     </Form>
   );
