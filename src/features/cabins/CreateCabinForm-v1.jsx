@@ -8,39 +8,21 @@ import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createEditCabin } from "../../services/apiCabins";
+import { createCabin } from "../../services/apiCabins";
 import FormRow from "../../ui/FormRow";
 
-function CreateCabinForm({ cabinToEdit }) {
-  //editvaues:دي اللي كانت موجوده اصلا
-  const { id: editId, ...editValues } = cabinToEdit || {};
-  const isEditSession = Boolean(editId);
-
+function CreateCabinForm() {
   //register → لتسجيل كل input عندك.
   //handleSubmit → لتجهيز submit الفورم مع validation تلقائي.
 
-  const { register, handleSubmit, reset, getValues, formState } = useForm({
-    defaultValues: isEditSession ? editValues : {},
-  });
+  const { register, handleSubmit, reset, getValues, formState } = useForm();
   const { errors } = formState;
   // console.log(errors);
 
   const queryClient = useQueryClient();
 
-  const { isLoading: isCreating, mutate: createCabin } = useMutation({
-    mutationFn: createEditCabin,
-    onSuccess: () => {
-      toast.success("Cabin successfully Edited");
-      queryClient.invalidateQueries({
-        queryKey: ["cabins"],
-      });
-      reset();
-    },
-    onError: (err) => toast.error(err.message),
-  });
-
-  const { isLoading: isEditing, mutate: editCabin } = useMutation({
-    mutationFn: ({ newEditCabin, id }) => createEditCabin(newEditCabin, id),
+  const { isLoading: isCreating, mutate } = useMutation({
+    mutationFn: createCabin,
     onSuccess: () => {
       toast.success("New cabin successfully created");
       queryClient.invalidateQueries({
@@ -50,16 +32,11 @@ function CreateCabinForm({ cabinToEdit }) {
     },
     onError: (err) => toast.error(err.message),
   });
-  const isWorking = isCreating || isEditing;
 
   //دي هتتنفذ اول لما اعمل سبمت
   function onSubmit(data) {
-    const image = typeof data.image === "string" ? data.image : data.image[0];
     //image:data.image[0] انا كدا حولتها لفايل يعني اشبه بالاوبجكت
-    if (isEditSession)
-      editCabin({ newEditCabin: { ...data, image: image }, id: editId });
-    else createCabin({ ...data, image: image });
-    console.log(data);
+    mutate({ ...data, image: data.image[0] });
   }
 
   function onError(errors) {
@@ -71,7 +48,7 @@ function CreateCabinForm({ cabinToEdit }) {
         <Input
           type="text"
           id="name"
-          disabled={isWorking}
+          disabled={isCreating}
           {...register("name", {
             required: "This field is required",
           })}
@@ -82,7 +59,7 @@ function CreateCabinForm({ cabinToEdit }) {
         <Input
           type="number"
           id="maxCapacity"
-          disabled={isWorking}
+          disabled={isCreating}
           {...register("maxCapacity", {
             required: "This field is required",
             min: {
@@ -97,7 +74,7 @@ function CreateCabinForm({ cabinToEdit }) {
         <Input
           type="number"
           id="regularPrice"
-          disabled={isWorking}
+          disabled={isCreating}
           {...register("regularPrice", {
             required: "This field is required",
             min: {
@@ -112,7 +89,7 @@ function CreateCabinForm({ cabinToEdit }) {
         <Input
           type="number"
           id="discount"
-          disabled={isWorking}
+          disabled={isCreating}
           defaultValue={0}
           {...register("discount", {
             required: "This field is required",
@@ -130,7 +107,7 @@ function CreateCabinForm({ cabinToEdit }) {
         <Textarea
           type="number"
           id="description"
-          disabled={isWorking}
+          disabled={isCreating}
           defaultValue=""
           {...register("description", {
             required: "This field is required",
@@ -145,7 +122,7 @@ function CreateCabinForm({ cabinToEdit }) {
           // "image/*" معناها: أي نوع من الصور، زي PNG, JPG, GIF…
           accept="image/*"
           {...register("image", {
-            required: isEditSession ? false : "This field is required",
+            required: "This field is required",
           })}
         />
       </FormRow>
@@ -155,9 +132,7 @@ function CreateCabinForm({ cabinToEdit }) {
         <Button variation="secondary" type="reset">
           Cancel
         </Button>
-        <Button disabled={isWorking}>
-          {isEditSession ? "Edit Cabin" : "Craete new cabin"}
-        </Button>
+        <Button disabled={isCreating}>Add cabin</Button>
       </FormRow>
     </Form>
   );
