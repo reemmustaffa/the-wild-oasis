@@ -16,7 +16,7 @@ const FilterButton = styled.button`
   border: none;
 
   ${(props) =>
-    props.active &&
+    props.$active &&
     css`
       background-color: var(--color-brand-600);
       color: var(--color-brand-50);
@@ -42,6 +42,8 @@ function Filter({ filterField, options }) {
 
   function handleClick(value) {
     searchParams.set(filterField, value);
+    //دا عشان لما مثلا اكون بقلب وفي الصفحه التانيه وعملت فلتر والفلتر دا مفروض هيبقي صفحه واحده اللي هي الاولي فكدا هيعمل ايرور
+    if (searchParams.get("page")) searchParams.set("page", 1);
     setSearchParams(searchParams);
   }
 
@@ -51,7 +53,8 @@ function Filter({ filterField, options }) {
         <FilterButton
           onClick={() => handleClick(option.value)}
           key={option.value}
-          active={currentFilter === option.value}
+          $active={currentFilter === option.value}
+          disabled={currentFilter === option.value}
         >
           {option.label}
         </FilterButton>
