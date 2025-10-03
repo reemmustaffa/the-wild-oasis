@@ -85,9 +85,9 @@ function Toggle({ id }) {
   const { openId, open, close, setPosition } = useContext(MenusContext);
 
   function handleClick(e) {
+    e.stopPropagation();
     //بتجيب معلومات عن الزرار بتاعي ي مكانه طوله عرضه
     const rect = e.target.closest("button").getBoundingClientRect();
-    console.log(rect);
     setPosition({
       x: window.innerWidth - rect.width - rect.x,
       y: rect.y + rect.height + 8,
@@ -102,7 +102,7 @@ function Toggle({ id }) {
 }
 function List({ id, children }) {
   const { openId, position, close } = useContext(MenusContext);
-  const { ref } = useOutSideClick(close);
+  const { ref } = useOutSideClick(close, false);
   if (id !== openId) return null;
   return createPortal(
     <StyledList position={position} ref={ref}>
