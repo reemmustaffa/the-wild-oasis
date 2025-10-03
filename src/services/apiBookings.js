@@ -40,7 +40,7 @@ export async function getBooking(id) {
     .from("bookings")
     .select("*, cabins(*), guests(*)")
     .eq("id", id)
-    .single();
+    .maybeSingle();
 
   if (error) {
     console.error(error);
@@ -51,6 +51,7 @@ export async function getBooking(id) {
 }
 
 // Returns all BOOKINGS that are were created after the given date. Useful to get bookings created in the last 30 days, for example.
+//data:ISIString
 export async function getBookingsAfterDate(date) {
   const { data, error } = await supabase
     .from("bookings")
@@ -72,6 +73,7 @@ export async function getStaysAfterDate(date) {
     .from("bookings")
     // .select('*')
     .select("*, guests(fullName)")
+    //بتجيب التاريخ اللي مابنهم بما فيهم النهارده
     .gte("startDate", date)
     .lte("startDate", getToday());
 

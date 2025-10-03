@@ -19,7 +19,7 @@ function CreateCabinForm({ cabinToEdit, onCloseModal }) {
   const { id: editId, ...editValues } = cabinToEdit || {};
   const isEditSession = Boolean(editId);
 
-  //register → لتسجيل كل input عندك.
+  //register → تربط input بالـ form.
   //handleSubmit → لتجهيز submit الفورم مع validation تلقائي.
   const { register, handleSubmit, reset, getValues, formState } = useForm({
     defaultValues: isEditSession ? editValues : {},
@@ -97,7 +97,7 @@ function CreateCabinForm({ cabinToEdit, onCloseModal }) {
             required: "This field is required",
             min: {
               value: 1,
-              message: "Capacity should be at least one",
+              message: "Price should be at least one",
             },
           })}
         />

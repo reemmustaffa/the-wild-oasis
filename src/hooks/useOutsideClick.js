@@ -13,6 +13,7 @@ export function useOutSideClick(close, listenCapturing = true) {
           console.log(ref.current);
           //دي بترجع ترو ولا فولس هل العنصر اللي انا ضغطت عليه جوا المودل ولالا
           console.log(ref.current.contains(e.target));
+          console.log(e.target);
         }
       }
       document.addEventListener("click", handleClick, listenCapturing);
