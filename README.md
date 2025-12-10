@@ -1,126 +1,111 @@
+// ...existing code...
 # The Wild Oasis
 
-A modern, interactive Single Page Application (SPA) built with React and Vite — a frontend that demonstrates working with remote data, global state, and client-side routing. This README documents the tools & technologies used, repository structure, scripts, and how to run the project locally.
+A modern, interactive Single Page Application (SPA) built with React + Vite for managing bookings, cabins, guests and related features. This README is modeled on the "WorldWise" structure to highlight learning goals, tech, features and folder layout.
 
-🌟 Summary
-- Frontend SPA scaffolded with Vite and React 18.
-- Uses Supabase for backend interactions (client library included).
-- Data fetching and caching with TanStack React Query.
-- Focus on modular component architecture, optimized data fetching, and a developer-friendly build setup.
+---
 
-Learning focus
-- Working with Supabase as a backend service (authentication / DB client).
-- Client-side data fetching & caching patterns using @tanstack/react-query.
-- Component-driven design with styled-components.
-- Routing using React Router (project includes react-router-dom).
-- Performance optimizations with code-splitting (React.lazy + Suspense) — recommended patterns.
-- Using ESLint and vite-plugin-eslint for a consistent codebase.
+## 🧠 Learning Focus
 
-Key features
-- SPA using React + React Router for client-side navigation.
-- Supabase client integrated for interacting with backend APIs.
-- Centralized async data handling using React Query.
-- Form handling using react-hook-form and user-friendly toasts with react-hot-toast.
-- Charts (Recharts) for any data visualizations.
-- Styled components for encapsulated component styling.
-- Dev tooling with Vite for fast HMR and small production bundles.
-- Deployment-ready with Netlify and Vercel config files in the repo.
+This project was created to practice and demonstrate advanced React concepts:
 
-Tech stack
-Runtime dependencies
-- react, react-dom
-- @supabase/supabase-js
-- @tanstack/react-query, @tanstack/react-query-devtools
-- react-router-dom
-- react-hook-form
-- react-error-boundary
-- react-hot-toast
-- react-icons
-- recharts
-- date-fns
-- styled-components
+- React Router: nested routes and protected routes for SPA navigation.
+- Context API + useReducer: scalable global state (auth, data).
+- Advanced useEffect: controlled side-effects and optimized API calls.
+- Performance: lazy loading (React.lazy + Suspense) and code-splitting.
+- Component design: reusable, modular and testable components.
 
-Dev dependencies / build tooling
-- vite, @vitejs/plugin-react
-- eslint and ESLint plugins/configs
-- vite-plugin-eslint
-- TypeScript types for React (@types/react / @types/react-dom)
+---
 
-(Specific versions are in package.json.)
+## 🧩 Key Features
 
-Scripts
-- npm run dev — start Vite dev server
-- npm run build — build production assets with Vite
-- npm run preview — preview the production build locally
-- npm run lint — run ESLint (configured to fail on warnings)
+- SPA using React Router for client-side navigation.
+- Dynamic data management (bookings, cabins, guests) via API/services.
+- Protected routes with a simple auth layer.
+- Global state via Context + Reducers (e.g., Dark mode, auth).
+- Performance optimizations: lazy-loaded pages + Suspense fallbacks.
+- Reusable UI components and custom hooks.
 
-Repository top-level structure
-- .eslintrc.json — ESLint configuration
+---
+
+## 🛠️ Tech Stack
+
+- React 18 (JSX)
+- Vite (dev server & build)
+- React Router v6
+- Context API + useReducer
+- @tanstack/react-query (where used)
+- CSS Modules / plain CSS
+- JavaScript (ESM)
+- Optional: json-server for local mock API (if present)
+- ESLint
+
+---
+
+## 📂 Folder Structure (overview)
+
+Top-level
+- .eslintrc.json
 - .gitignore
-- index.html — Vite entry HTML
-- package.json / package-lock.json
-- netlify.toml — Netlify deployment configuration
-- vercel.json — Vercel deployment configuration
-- vite.config.js — Vite configuration
-- public/ — static assets served by Vite
-- src/ — application source code (components, contexts, hooks, pages, etc.)
-- README.md — this file
+- index.html
+- netlify.toml / vercel.json (deployment)
+- package.json
+- README.md
+- vite.config.js
+- public/
 
-Suggested src/ layout (adapt to your project)
-- src/
-  - main.jsx — render root and set up providers
-  - App.jsx — app routes and layout
-  - components/
-    - Nav/, Button/, Spinner/, Form/, Map/, etc.
-  - contexts/
-    - SupabaseClient.js or supabase.js
-    - QueryClientProvider wrapper
-  - hooks/
-    - custom hooks (e.g., useAuth, useFetchCities)
-  - pages/
-    - Home/, Cities/, CityDetail/, Login/, NotFound/
-  - services/
-    - api.js (supabase helpers)
-  - styles/
-    - global.css or styled-components theme
-  - assets/
-    - images, icons
+src/
+- src/App.jsx — main app component
+- src/main.jsx — app entry / router / providers
+- src/context/ — shared contexts (e.g., DarkModeContext.jsx)
+- src/features/ — feature modules (authentication, bookings, cabins, dashboard, settings)
+  - src/features/bookings/useBookings.js — example React Query hook
+- src/hooks/ — custom hooks (useLocalStorageState.js, useMoveBack.js, useOutsideClick.js)
+- src/pages/ — page components (Account.jsx, Booking.jsx, etc.)
+- src/services/ — API wrapper functions
+- src/ui/ — reusable UI components
+- src/styles/ — shared styles
+- src/utils/ — helpers and utilities
+- src/data/ — data uploader / mock data (if present)
 
-Getting started (local)
-1. Install Node.js (v16+ recommended) and npm.
-2. Clone the repo:
-   git clone https://github.com/reemmustaffa/the-wild-oasis.git
-   cd the-wild-oasis
-3. Install dependencies:
-   npm install
-4. Configure environment variables (if using Supabase):
-   - Create a .env file (or configure on your host) and add:
-     VITE_SUPABASE_URL=<your-supabase-url>
-     VITE_SUPABASE_ANON_KEY=<your-supabase-anon-key>
-5. Start dev server:
-   npm run dev
-6. Open the URL printed by Vite (typically http://localhost:5173).
+---
 
-Building & preview
-- npm run build
-- npm run preview
+## ⚙️ Installation & Setup
 
-Deployment notes
-- netlify.toml and vercel.json are present for Netlify and Vercel deployments.
-- Make sure to add required environment variables (e.g., SUPABASE keys) in your hosting provider before deploying.
+1. Install dependencies:
+```bash
+npm install
+```
 
-Recommendations / Next improvements
-- Add a small README section showing example environment variables with safe placeholders.
-- Add a sample .env.example to document required variables.
-- If using React Router protected routes, include a FakeAuth / AuthContext pattern to document authentication behavior.
-- Add screenshots and a brief demo GIF to the README to showcase the UI.
-- Consider adding tests and a GitHub Actions workflow for CI (lint/build).
+2. (Optional) Run mock backend if provided (json-server):
+```bash
+npm run server
+```
 
-License
-- Add a LICENSE file to clarify project usage (MIT recommended if you want permissive usage).
+3. Start dev server:
+```bash
+npm run dev
+```
 
-If you’d like, I can:
-- Update the repo README.md directly with this content (I can push a commit if you give the repo owner/permission), or
-- Add a .env.example and a short contributing guide next.
+4. Build for production:
+```bash
+npm run build
+```
 
-Tell me which next step you prefer and I’ll perform it. 
+See scripts in package.json for exact commands.
+
+---
+
+## 🌟 Key Highlights
+
+- ProtectedRoute component to guard private pages.
+- Context + useReducer patterns for async state management (loading / success / error).
+- SpinnerFullPage or Suspense fallback for global loading states.
+- Clear, modular folder layout for scaling features.
+
+---
+
+If you want, I can:
+- Replace the current README contents with this full version.
+- Add badges (build, coverage), contributing guide, or deployment steps for Netlify/Vercel.
+- Add examples for key hooks (e.g., useBookings) or a quick API usage snippet.
